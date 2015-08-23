@@ -24,6 +24,29 @@
           window.bot.chatUtilities.spam.push(spamWords[i]);
         }
 
+        function isInArray(value, array) {
+          return array.indexOf(value) > -1;
+        }
+
+        var Grabs = [];
+
+        // Grab notification.
+        function grabNotif(id){
+          var user = window.bot.userUtilities.lookupUser(id);
+          if (!isInArray(id, Grabs)){
+            Grabs.push(id);
+            API.sendChat('/me ' + user.username + ' grabbed this track!');
+          }
+        }
+
+        function clearGrabs(){
+          Grabs = [];
+        }
+
+        API.on(API.VOTE_UPDATE, grabNotif);
+
+        API.on(API.ADVANCE, clearGrabs);
+
         // Example code for a bot command:
         bot.commands.baconCommand = {
             command: 'bacon',  // The command to be called. With the standard command literal this would be: !bacon
